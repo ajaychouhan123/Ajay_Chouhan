@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace ajaychouhan1.Filter
+namespace ajay_chouhan.Filter
 {
     public static class FilterService<TEntity>
     {
