@@ -1,0 +1,33 @@
+name: Deploy LowCode to Azure App Service
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AZURE_SP_ID: ${{ secrets.AZURE_SP_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SP_SECRET: ${{ secrets.AZURE_SP_SECRET }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Azure CLI
+        uses: azure/cli@v2
+        with:
+          azcliversion: 2.0.72
+
+      - name: Login to Azure
+        run: az login --service-principal -u ${{ env.AZURE_SP_ID }} -p ${{ env.AZURE_SP_SECRET }} --tenant ${{ env.AZURE_TENANT_ID }}
+
+      - name: Set Azure subscription
+        run: az account set --subscription ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure App Service
+        run: az webapp deployment source config --name YourAppName --resource-group YourResourceGroup --repo-url https://github.com/your-username/your-repo.git --branch main
